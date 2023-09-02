@@ -16,10 +16,12 @@ class SceneDelegate: UIResponder, UIWindowSceneDelegate {
         
         guard let windowScene = (scene as? UIWindowScene) else { return }
         
-        let vc = MusicAlbumViewController()
+        let vc = MusicListTableViewController()
+        
+        let navController = UINavigationController(rootViewController: vc)
         let window = UIWindow(windowScene: windowScene)
         
-        window.rootViewController = vc
+        window.rootViewController = navController
         window.makeKeyAndVisible()
         
         self.window = window
