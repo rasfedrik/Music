@@ -9,18 +9,22 @@ import Foundation
 
 class MusicRequest {
     
+    // Первая часть url
     private struct Constants {
         static let baseURL = "https://api.mobimusic.kz"
     }
     
+    // Вторая часть url
     private let endpoint: MusicEndpoint
     
+    // Формирование url
     private var urlString: String {
         var string = Constants.baseURL
         string += "/\(endpoint.rawValue)"
         return string
     }
     
+    /// Полный url
     var url: URL? {
         return URL(string: urlString)
     }

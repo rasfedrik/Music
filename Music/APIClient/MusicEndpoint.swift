@@ -9,6 +9,6 @@ import Foundation
 
 enum MusicEndpoint: String {
     
+    /// Вторая часть url
     case songDetail = "?method=product.getCard&productId=234234"
-    
 }

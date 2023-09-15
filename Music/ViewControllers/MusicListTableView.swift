@@ -9,16 +9,21 @@ import UIKit
 
 class MusicListTableViewController: UITableViewController {
     
+    /// Идентификатор таблицы треков
     static let identifier = "MusicListTableView"
     
-    private lazy var indicator = UIActivityIndicatorView()
+    /// Индикатор загрузки данных в таблицу
+    private lazy var tableActivityIndicator = UIActivityIndicatorView()
     
-    private var imageView: UIImageView?
-    private var img: UIImage?
+    /// ImageView для главного изображения альбома
+    private var albumImageView: UIImageView?
+    
+    /// URL изображения альбома
     private var albumImageURL: URL?
+    
+    /// ViewModel для ячейки таблицы треков
     private var cellViewModel: [SongTableViewCellViewModel] = []
 
-    
     private var collection: Collection? {
         didSet {
             let album = URL(string: collection?.album.the234234.coverURL ?? "")
@@ -26,11 +31,13 @@ class MusicListTableViewController: UITableViewController {
         }
     }
     
-    private var persons: [Person] = []
+    /// Список исполнителей
+    private var singers: [Person] = []
     
-    private var songs: [Track] = [] {
+    /// Список треков
+    private var tracks: [Track] = [] {
         didSet {
-            for song in songs {
+            for song in tracks {
                 let viewModel = SongTableViewCellViewModel(albumImageView: URL(string: song.coverURL), nameSongLabel: song.name)
                 
                 if !cellViewModel.contains(viewModel) {
@@ -43,44 +50,49 @@ class MusicListTableViewController: UITableViewController {
     override func viewDidLoad() {
         super.viewDidLoad()
         
+        // Настройка Navigation controller
         navigationItem.style = .navigator
         navigationController?.navigationBar.barTintColor = .black
         
         tableView.delegate = self
         tableView.dataSource = self
         
-        imageView = UIImageView(frame: CGRect(
+        // Настройка хедера для tableView
+        albumImageView = UIImageView(frame: CGRect(
             x: view.center.x,
             y: view.center.x,
             width: 300,
             height: 300
         ))
+        albumImageView?.contentMode = .scaleAspectFit
+        tableView.tableHeaderView = albumImageView
         
-        imageView?.contentMode = .scaleAspectFit
-        tableView.tableHeaderView = imageView
-        
-        activityIndicator()
-        indicator.startAnimating()
+        // Запуск индикатора загрузки
+        activityIndicatorSettings()
+        tableActivityIndicator.startAnimating()
         view.isUserInteractionEnabled = false
         
+        // Регестрация ячейки таблицы исполнителей и хедера с названием альбома
         tableView.register(UINib.init(nibName: SongTableViewCell.identifier, bundle: nil), forCellReuseIdentifier: SongTableViewCell.identifier)
         tableView.register(HeaderView.self,
                            forHeaderFooterViewReuseIdentifier: HeaderView.identifier)
         
+        // Изменение цвета и оттенка таблицы
         tableView.backgroundColor = .black
         tableView.tintColor = .black
         
         fetchSongs()
         
     }
-    
-    private func activityIndicator() {
-        indicator = UIActivityIndicatorView(frame: .zero)
-        indicator.hidesWhenStopped = true
-        indicator.style = .large
+    /// Настройка индикатора загрузки данных в таблицу
+    private func activityIndicatorSettings() {
+        tableActivityIndicator = UIActivityIndicatorView(frame: .zero)
+        tableActivityIndicator.hidesWhenStopped = true
+        tableActivityIndicator.style = .large
         indicatorConstraints()
     }
     
+    /// Получение изображения из albumImageURL
     private func fetchImage() {
         guard let albumImageURL = albumImageURL else { return }
         
@@ -88,9 +100,9 @@ class MusicListTableViewController: UITableViewController {
             switch result {
             case .success(let data):
                 DispatchQueue.main.async {
-                    self?.imageView?.image = UIImage(data: data)
-                    self?.img = UIImage(data: data)
-                    self?.indicator.stopAnimating()
+                    self?.albumImageView?.image = UIImage(data: data)
+                    
+                    self?.tableActivityIndicator.stopAnimating()
                     self?.view.isUserInteractionEnabled = true
                 }
             case .failure(let error):
@@ -99,7 +111,7 @@ class MusicListTableViewController: UITableViewController {
         }
     }
     
-    
+    /// Получение треков, исполнителей и изображений к трекам
     private func fetchSongs() {
         MusicService.shared.execute(.songDetailRequest, expecting: Music.self) { [weak self] result in
             
@@ -110,18 +122,25 @@ class MusicListTableViewController: UITableViewController {
                 DispatchQueue.main.async {
                     let track = song.collection.track
                     let person = song.collection.people
+                    
+                    // Заполнение массива со всеми данными
                     self.collection = song.collection
                     
+                    // Заполнение массива исполнителей
                     for (_, value) in person {
-                        self.persons.append(value)
+                        self.singers.append(value)
                     }
                     
+                    // Заполнение массива треков
                     for (_, value) in track {
-                        self.songs.append(value)
+                        self.tracks.append(value)
                     }
                     
-                    self.indicator.stopAnimating()
+                    // Остановка индикатора загрузки данных в таблицу
+                    self.tableActivityIndicator.stopAnimating()
                     self.view.isUserInteractionEnabled = true
+                    
+                    // Получение изображений
                     self.fetchImage()
                     
                     self.tableView.reloadData()
@@ -130,24 +149,24 @@ class MusicListTableViewController: UITableViewController {
                 
             case .failure(let error):
                 print(error)
-                
             }
         }
     }
     
+    /// Констрейнты индикатора загрузки данных в таблицу
     private func indicatorConstraints() {
-        indicator.translatesAutoresizingMaskIntoConstraints = false
-        view.addSubview(indicator)
+        tableActivityIndicator.translatesAutoresizingMaskIntoConstraints = false
+        view.addSubview(tableActivityIndicator)
         
         NSLayoutConstraint.activate([
-            indicator.heightAnchor.constraint(equalToConstant: 30),
-            indicator.widthAnchor.constraint(equalToConstant: 30),
-            indicator.centerXAnchor.constraint(equalTo: view.centerXAnchor),
-            indicator.topAnchor.constraint(equalTo: view.topAnchor)
+            tableActivityIndicator.heightAnchor.constraint(equalToConstant: 30),
+            tableActivityIndicator.widthAnchor.constraint(equalToConstant: 30),
+            tableActivityIndicator.centerXAnchor.constraint(equalTo: view.centerXAnchor),
+            tableActivityIndicator.topAnchor.constraint(equalTo: view.topAnchor)
         ])
-        
     }
     
+    // MARK: - TableViewDelegate, TableViewDataSource
     override func numberOfSections(in tableView: UITableView) -> Int {
         return 1
     }
@@ -156,6 +175,7 @@ class MusicListTableViewController: UITableViewController {
         return 100
     }
     
+    // Настройка хедера с нахванием альбома
     override func tableView(_ tableView: UITableView, viewForHeaderInSection section: Int) -> UIView? {
         guard let header = tableView.dequeueReusableHeaderFooterView(withIdentifier: HeaderView.identifier) as? HeaderView else { fatalError("header fail") }
         header.nameLabel.text = collection?.album.the234234.name
@@ -188,13 +208,14 @@ class MusicListTableViewController: UITableViewController {
 
         tableView.deselectRow(at: indexPath, animated: true)
 
+        /// Индекс нажатой ячейки
         let position = indexPath.row
         let vc = SongViewController()
 
-        vc.persons = persons
+        vc.singers = singers
         vc.collection = collection
-        vc.track = songs
-        vc.image = img
+        vc.track = tracks
+        vc.albumImageView = albumImageView
         vc.position = position
         
         present(vc, animated: true)

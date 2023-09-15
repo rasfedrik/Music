@@ -9,7 +9,9 @@ import Foundation
 
 class SongTableViewCellViewModel {
     
+    /// Изображение альбома
     var albumImageView: URL?
+    /// Название песни
     var nameSongLabel: String
     
     init(albumImageView: URL?, nameSongLabel: String) {
@@ -17,14 +19,12 @@ class SongTableViewCellViewModel {
         self.nameSongLabel = nameSongLabel
     }
     
+    /// Получение изображения
     func fetchImage(completion: @escaping (Result<Data, Error>) -> Void) {
-        
-        guard let albumImage = albumImageView else { completion(.failure(Error(code: 400, message: "bad urlImage")))
+        guard let albumImage = albumImageView else { completion(.failure(URLError(.badURL)))
             return
         }
-        
         FetchImage.shared.downloadImage(albumImage, completion: completion)
-        
     }
 }
 

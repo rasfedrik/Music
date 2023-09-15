@@ -28,7 +28,7 @@
 		D8A96E912A9F8E410015BBD3 /* MusicListTableView.swift in Sources */ = {isa = PBXBuildFile; fileRef = D8A96E902A9F8E400015BBD3 /* MusicListTableView.swift */; };
 		D8A96E982A9F91DB0015BBD3 /* SongTableViewCell.swift in Sources */ = {isa = PBXBuildFile; fileRef = D8A96E962A9F91DB0015BBD3 /* SongTableViewCell.swift */; };
 		D8A96E992A9F91DB0015BBD3 /* SongTableViewCell.xib in Resources */ = {isa = PBXBuildFile; fileRef = D8A96E972A9F91DB0015BBD3 /* SongTableViewCell.xib */; };
-		D8D83E2B2AA3494700B48F28 /* SongView.swift in Sources */ = {isa = PBXBuildFile; fileRef = D8D83E2A2AA3494700B48F28 /* SongView.swift */; };
+		D8D83E2B2AA3494700B48F28 /* ContainerForSongVCView.swift in Sources */ = {isa = PBXBuildFile; fileRef = D8D83E2A2AA3494700B48F28 /* ContainerForSongVCView.swift */; };
 /* End PBXBuildFile section */
 
 /* Begin PBXFileReference section */
@@ -55,7 +55,7 @@
 		D8A96E902A9F8E400015BBD3 /* MusicListTableView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = MusicListTableView.swift; sourceTree = "<group>"; };
 		D8A96E962A9F91DB0015BBD3 /* SongTableViewCell.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = SongTableViewCell.swift; sourceTree = "<group>"; };
 		D8A96E972A9F91DB0015BBD3 /* SongTableViewCell.xib */ = {isa = PBXFileReference; lastKnownFileType = file.xib; path = SongTableViewCell.xib; sourceTree = "<group>"; };
-		D8D83E2A2AA3494700B48F28 /* SongView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = SongView.swift; sourceTree = "<group>"; };
+		D8D83E2A2AA3494700B48F28 /* ContainerForSongVCView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ContainerForSongVCView.swift; sourceTree = "<group>"; };
 /* End PBXFileReference section */
 
 /* Begin PBXFrameworksBuildPhase section */
@@ -91,7 +91,7 @@
 			isa = PBXGroup;
 			children = (
 				D817979E2AA03F810038665C /* HeaderView.swift */,
-				D8D83E2A2AA3494700B48F28 /* SongView.swift */,
+				D8D83E2A2AA3494700B48F28 /* ContainerForSongVCView.swift */,
 			);
 			path = Views;
 			sourceTree = "<group>";
@@ -282,7 +282,7 @@
 				D8A96E7E2A9F8B110015BBD3 /* SceneDelegate.swift in Sources */,
 				D81797AB2AA0AB2C0038665C /* MusicRequest.swift in Sources */,
 				D8A96E912A9F8E410015BBD3 /* MusicListTableView.swift in Sources */,
-				D8D83E2B2AA3494700B48F28 /* SongView.swift in Sources */,
+				D8D83E2B2AA3494700B48F28 /* ContainerForSongVCView.swift in Sources */,
 				D81797A62AA0A8360038665C /* Model.swift in Sources */,
 				D81797B32AA0BFB30038665C /* FetchImage.swift in Sources */,
 			);

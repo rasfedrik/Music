@@ -22,15 +22,14 @@ class HeaderView: UITableViewHeaderFooterView {
     
     override init(reuseIdentifier: String?) {
         super.init(reuseIdentifier: reuseIdentifier)
-        
         addConstraints()
-        
     }
     
     required init?(coder: NSCoder) {
         fatalError("init(coder:) has not been implemented")
     }
     
+    // Добавление констрейнтов
     private func addConstraints() {
         addSubview(nameLabel)
         

@@ -7,8 +7,9 @@
 
 import UIKit
 
-class SongView: UIView {
+class ContainerForSongVCView: UIView {
     
+    /// Изображение альбома
     lazy var albumImageView: UIImageView = {
         let imageView = UIImageView(frame: .zero)
         imageView.translatesAutoresizingMaskIntoConstraints = false
@@ -16,18 +17,21 @@ class SongView: UIView {
         return imageView
     }()
     
+    /// Название альбома
     lazy var nameAlbumLabel: UILabel = {
         let label = UILabel(frame: .zero)
         label.translatesAutoresizingMaskIntoConstraints = false
         return label
     }()
     
+    /// Название песни
     lazy var nameSongLabel: UILabel = {
         let label = UILabel(frame: .zero)
         label.translatesAutoresizingMaskIntoConstraints = false
         return label
     }()
     
+    /// Имя исполнителя
     lazy var nameSingerLabel: UILabel = {
         let label = UILabel(frame: .zero)
         label.translatesAutoresizingMaskIntoConstraints = false
@@ -36,7 +40,7 @@ class SongView: UIView {
         return label
     }()
     
-    // Control
+    /// StackView для кнопок previousTrackButton, playPouseButton, nextTrackButton
     lazy var stackView: UIStackView = {
         let stack = UIStackView()
         stack.translatesAutoresizingMaskIntoConstraints = false
@@ -46,6 +50,7 @@ class SongView: UIView {
         return stack
     }()
     
+    /// Предыдущая песня
     lazy var previousTrackButton: UIButton = {
         let button = UIButton()
         button.translatesAutoresizingMaskIntoConstraints = false
@@ -54,6 +59,7 @@ class SongView: UIView {
         return button
     }()
     
+    /// Старт/пауза
     lazy var playPouseButton: UIButton = {
         let button = UIButton()
         button.translatesAutoresizingMaskIntoConstraints = false
@@ -62,6 +68,7 @@ class SongView: UIView {
         return button
     }()
     
+    /// Следующая песня
     lazy var nextTrackButton: UIButton = {
         let button = UIButton()
         button.translatesAutoresizingMaskIntoConstraints = false
@@ -70,6 +77,7 @@ class SongView: UIView {
         return button
     }()
     
+    /// Таймлайн песни
     lazy var slider: UISlider = {
         let slider = UISlider(frame: .zero)
         slider.translatesAutoresizingMaskIntoConstraints = false
@@ -79,7 +87,6 @@ class SongView: UIView {
     override init(frame: CGRect) {
         super.init(frame: frame)
         translatesAutoresizingMaskIntoConstraints = false
-
     }
     
     required init?(coder: NSCoder) {
@@ -91,9 +98,10 @@ class SongView: UIView {
         constraints()
     }
     
+    // Добавление констрейнтов
     private func constraints() {
         
-        // Description
+        // Описание трека
         addSubview(albumImageView)
         addSubview(nameAlbumLabel)
         addSubview(nameSongLabel)
@@ -116,7 +124,7 @@ class SongView: UIView {
             nameSingerLabel.widthAnchor.constraint(equalToConstant: frame.width / 2)
         ])
         
-        // Control
+        // Добавление кнопок управления в stackView
         stackView.addArrangedSubview(previousTrackButton)
         stackView.addArrangedSubview(playPouseButton)
         stackView.addArrangedSubview(nextTrackButton)
@@ -130,6 +138,7 @@ class SongView: UIView {
             stackView.trailingAnchor.constraint(equalTo: trailingAnchor, constant: -20)
         ])
         
+        // Слайдер
         addSubview(slider)
         NSLayoutConstraint.activate([
             slider.topAnchor.constraint(equalTo: stackView.bottomAnchor, constant: 50),

@@ -11,136 +11,156 @@ import AVFoundation
 
 class SongViewController: UIViewController {
     
+    /// Collection полученный из MusicListTableView
     var collection: Collection?
+    
+    /// Массив треков полученный из MusicListTableView
     var track: [Track] = []
-    var image: UIImage?
+    
+    /// Изображение альбома полученное из MusicListTableView
+    var albumImageView: UIImageView?
+    
+    /// Индекс нажатой ячейки полученный из MusicListTableView
     var position = 0
-    var persons: [Person] = []
     
-    var timer: Timer?
+    /// Массив исполнителей полученный из MusicListTableView
+    var singers: [Person] = []
     
+    /// Таймер для синхронизации движения слайдера и времени трека
+    private var timer: Timer?
+    
+    /// Массив имён исполнителей
     private var singersName: [String] = []
-    private var mainView = SongView(frame: .zero)
     
-    private var player: AVAudioPlayer?
+    /// Контейнер для плеера и описания трека
+    private var container = ContainerForSongVCView(frame: .zero)
     
-    // Lifecycle
+    /// Audio player
+    private var audioPlayer: AVAudioPlayer?
+    
+    // MARK: - Lifecycle
     override func viewDidLoad() {
         super.viewDidLoad()
         
         view.backgroundColor = .systemBackground
-        configurePlayer()
-        configureData()
         
-        mainView.previousTrackButton.addTarget(self, action: #selector(didTapPreviousTrackButton), for: .touchUpInside)
-        mainView.playPouseButton.addTarget(self, action: #selector(didTapPlayPouseButton), for: .touchUpInside)
-        mainView.nextTrackButton.addTarget(self, action: #selector(didTapNextTrackButton), for: .touchUpInside)
-        mainView.slider.addTarget(self, action: #selector(sliderAcrion), for: .touchUpInside)
+        audioPlayerConfigure()
+        descriptionTreckConfigure()
         
-        constraints()
+        /// Обработка событий после нажатия кнопок плеера
+        container.previousTrackButton.addTarget(self, action: #selector(didTapPreviousTrackButton), for: .touchUpInside)
+        container.playPouseButton.addTarget(self, action: #selector(didTapPlayPouseButton), for: .touchUpInside)
+        container.nextTrackButton.addTarget(self, action: #selector(didTapNextTrackButton), for: .touchUpInside)
+        container.slider.addTarget(self, action: #selector(sliderAcrion), for: .touchUpInside)
         
+        addContainerConstraints()
+        
+        // Запуск таймера
         timer = Timer.scheduledTimer(timeInterval: 0.1, target: self, selector: #selector(updateSlider), userInfo: nil, repeats: true)
         
     }
     
+    // Остановка плеера после закрытия ViewController
     override func viewDidDisappear(_ animated: Bool) {
         super.viewDidDisappear(animated)
-        player?.stop()
+        audioPlayer?.stop()
     }
     
-    // Actions
+    // MARK: - Actions
+    
+    /// Включить предыдущий трек
     @objc func didTapPreviousTrackButton(_ sender: UIButton) {
         if position > 0 {
             position = position - 1
-            player?.stop()
-            for subview in mainView.subviews {
+            audioPlayer?.stop()
+            for subview in container.subviews {
                 subview.removeFromSuperview()
             }
-            nameSingerLabelText()
-            mainView.albumImageView.image = image
-            mainView.nameAlbumLabel.text = collection?.album.the234234.name
-            mainView.nameSongLabel.text = track[position].name
             
-            configurePlayer()
-            constraints()
+            descriptionTreckConfigure()
+            
+            audioPlayerConfigure()
+            addContainerConstraints()
             
         }
     }
     
+    /// Play / pause трека
     @objc private func didTapPlayPouseButton(_ sender: UIButton) {
-        mainView.slider.maximumValue = Float((player?.duration ?? 0))
-        if player?.isPlaying == true {
-            player?.pause()
+        container.slider.maximumValue = Float((audioPlayer?.duration ?? 0))
+        if audioPlayer?.isPlaying == true {
+            audioPlayer?.pause()
             sender.setBackgroundImage(UIImage(systemName: "play.fill"), for: .normal)
         } else {
-            player?.play()
+            audioPlayer?.play()
             sender.setBackgroundImage(UIImage(systemName: "pause.fill"), for: .normal)
         }
     }
     
+    /// Включить следующий трек
     @objc private func didTapNextTrackButton(_ sender: UIButton) {
         if position < track.count - 1 {
             position = position + 1
-            player?.stop()
+            audioPlayer?.stop()
             
-            for subview in mainView.subviews {
+            for subview in container.subviews {
                 subview.removeFromSuperview()
             }
             
-            nameSingerLabelText()
-            mainView.albumImageView.image = image
-            mainView.nameAlbumLabel.text = collection?.album.the234234.name
-            mainView.nameSongLabel.text = track[position].name
+            descriptionTreckConfigure()
             
-            configurePlayer()
-            constraints()
+            audioPlayerConfigure()
+            addContainerConstraints()
             
-            mainView.slider.maximumValue = Float((player?.duration ?? 0))
+            container.slider.maximumValue = Float((audioPlayer?.duration ?? 0))
         }
     }
     
+    /// Скролинг трека
     @objc private func sliderAcrion(_ sender: UISlider) {
-        player?.stop()
-        player?.currentTime = TimeInterval(mainView.slider.value)
-        player?.prepareToPlay()
-        player?.play()
+        audioPlayer?.stop()
+        audioPlayer?.currentTime = TimeInterval(container.slider.value)
+        audioPlayer?.prepareToPlay()
+        audioPlayer?.play()
     }
     
+    /// Движение слайдера синхронно с временем треком
     @objc private func updateSlider() {
+        container.slider.maximumValue = Float((audioPlayer?.duration ?? 0))
+        container.slider.value = Float(audioPlayer?.currentTime ?? 0)
         
-        mainView.slider.maximumValue = Float((player?.duration ?? 0))
-        mainView.slider.value = Float(player?.currentTime ?? 0)
-        
-        if player?.isPlaying == false {
-            mainView.playPouseButton.setBackgroundImage(UIImage(systemName: "play.fill"), for: .normal)
+        if audioPlayer?.isPlaying == false {
+            container.playPouseButton.setBackgroundImage(UIImage(systemName: "play.fill"), for: .normal)
         } else {
-            mainView.playPouseButton.setBackgroundImage(UIImage(systemName: "pause.fill"), for: .normal)
+            container.playPouseButton.setBackgroundImage(UIImage(systemName: "pause.fill"), for: .normal)
         }
         
     }
     
-    private func configureData() {
+    /// Заполнение лейблов данными о треке и альбоме
+    private func descriptionTreckConfigure() {
         nameSingerLabelText()
-        mainView.albumImageView.image = image
-        mainView.nameAlbumLabel.text = collection?.album.the234234.name
-        mainView.nameSongLabel.text = track[position].name
+        container.albumImageView.image = albumImageView?.image
+        container.nameAlbumLabel.text = collection?.album.the234234.name
+        container.nameSongLabel.text = track[position].name
     }
     
+    /// Заполнение лейбла с именами исполнителей трека
     private func nameSingerLabelText() {
         let singersIDSongs = track[position].peopleIDS
         singersName = []
-        for singer in persons {
+        for singer in singers {
             for singerID in singersIDSongs {
                 if singerID == singer.id {
                     singersName.append(singer.name)
                 }
             }
         }
-        mainView.nameSingerLabel.text = singersName.joined(separator: ", ")
+        container.nameSingerLabel.text = singersName.joined(separator: ", ")
     }
     
-    private func configurePlayer() {
-        
+    /// Настройка аудиоплеера
+    private func audioPlayerConfigure() {
         let song = track[position]
         
         guard let urlString = Bundle.main.path(forResource: song.dir, ofType: "mp3") else {
@@ -153,11 +173,11 @@ class SongViewController: UIViewController {
             guard let url = URL(string: urlString) else {
                 return }
             
-            player = try AVAudioPlayer(contentsOf: url)
+            audioPlayer = try AVAudioPlayer(contentsOf: url)
             
-            player?.delegate = self
+            audioPlayer?.delegate = self
             
-            guard let player = player else {
+            guard let player = audioPlayer else {
                 return }
             
             player.play()
@@ -167,40 +187,41 @@ class SongViewController: UIViewController {
         }
     }
     
-    private func constraints() {
-        view.addSubview(mainView)
+    /// Выставление констрейнтов для контейнера с плеером и описанием трека
+    private func addContainerConstraints() {
+        view.addSubview(container)
         
-        mainView.translatesAutoresizingMaskIntoConstraints = false
+        container.translatesAutoresizingMaskIntoConstraints = false
         NSLayoutConstraint.activate([
-            mainView.topAnchor.constraint(equalTo: view.safeAreaLayoutGuide.topAnchor),
-            mainView.leadingAnchor.constraint(equalTo: view.safeAreaLayoutGuide.leadingAnchor),
-            mainView.trailingAnchor.constraint(equalTo: view.safeAreaLayoutGuide.trailingAnchor),
-            mainView.bottomAnchor.constraint(equalTo: view.safeAreaLayoutGuide.bottomAnchor)
+            container.topAnchor.constraint(equalTo: view.safeAreaLayoutGuide.topAnchor),
+            container.leadingAnchor.constraint(equalTo: view.safeAreaLayoutGuide.leadingAnchor),
+            container.trailingAnchor.constraint(equalTo: view.safeAreaLayoutGuide.trailingAnchor),
+            container.bottomAnchor.constraint(equalTo: view.safeAreaLayoutGuide.bottomAnchor)
         ])
     }
     
 }
 
+// MARK: - AVAudioPlayerDelegate
 extension SongViewController: AVAudioPlayerDelegate {
     
+    // Отслеживает завершение трека и включает следующий
     func audioPlayerDidFinishPlaying(_ player: AVAudioPlayer, successfully flag: Bool) {
         if flag {
             if position < track.count - 1 {
                 position = position + 1
                 player.stop()
                 
-                for subview in mainView.subviews {
+                for subview in container.subviews {
                     subview.removeFromSuperview()
                 }
-                configurePlayer()
-                constraints()
                 
-                mainView.slider.maximumValue = Float(player.duration)
+                audioPlayerConfigure()
+                addContainerConstraints()
                 
-                nameSingerLabelText()
-                mainView.albumImageView.image = image
-                mainView.nameAlbumLabel.text = collection?.album.the234234.name
-                mainView.nameSongLabel.text = track[position].name
+                container.slider.maximumValue = Float(player.duration)
+                
+                descriptionTreckConfigure()
             }
         }
     }
