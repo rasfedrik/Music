@@ -44,6 +44,7 @@ class ContainerForSongVCView: UIView {
     lazy var nameSongLabel: UILabel = {
         let label = UILabel(frame: .zero)
         label.translatesAutoresizingMaskIntoConstraints = false
+        label.font = label.font.withSize(30)
         return label
     }()
     
@@ -150,8 +151,8 @@ class ContainerForSongVCView: UIView {
         containerForDifferentOrientationView.addSubview(nameAlbumLabel)
         
         NSLayoutConstraint.activate([
-            dismissButton.topAnchor.constraint(equalTo: topAnchor, constant: 10),
-            dismissButton.leadingAnchor.constraint(equalTo: leadingAnchor, constant: 10),
+            dismissButton.topAnchor.constraint(equalTo: topAnchor, constant: 20),
+            dismissButton.leadingAnchor.constraint(equalTo: leadingAnchor, constant: 20),
             
             nameAlbumLabel.centerYAnchor.constraint(equalTo: dismissButton.centerYAnchor),
             nameAlbumLabel.centerXAnchor.constraint(equalTo: containerForDifferentOrientationView.centerXAnchor)
@@ -160,15 +161,18 @@ class ContainerForSongVCView: UIView {
         if orientationIsLandscape {
             // Горизонтальный режим
             NSLayoutConstraint.activate([
+                // Изображение альбома
                 albumImageView.heightAnchor.constraint(equalTo: containerForDifferentOrientationView.heightAnchor, multiplier: 0.5),
                 albumImageView.widthAnchor.constraint(equalTo: containerForDifferentOrientationView.heightAnchor, multiplier: 0.5),
                 albumImageView.topAnchor.constraint(equalTo: nameAlbumLabel.bottomAnchor, constant: 30),
                 albumImageView.leadingAnchor.constraint(equalTo: containerForDifferentOrientationView.leadingAnchor, constant: 50),
                 
+                // Название песни
                 nameSongLabel.topAnchor.constraint(equalTo: albumImageView.topAnchor),
                 nameSongLabel.leadingAnchor.constraint(equalTo: albumImageView.trailingAnchor, constant: 10),
                 nameSongLabel.trailingAnchor.constraint(equalTo: containerForDifferentOrientationView.trailingAnchor),
-
+                
+                // Имя исполнителя
                 nameSingerLabel.topAnchor.constraint(equalTo: nameSongLabel.bottomAnchor),
                 nameSingerLabel.leadingAnchor.constraint(equalTo: albumImageView.trailingAnchor, constant: 10),
                 nameSingerLabel.trailingAnchor.constraint(equalTo: containerForDifferentOrientationView.trailingAnchor)
@@ -184,16 +188,18 @@ class ContainerForSongVCView: UIView {
         } else {
             // Вертикальный режим
             NSLayoutConstraint.activate([
-                
+                // Изображение альбома
                 albumImageView.heightAnchor.constraint(equalTo: containerForDifferentOrientationView.heightAnchor, multiplier: 0.8),
                 albumImageView.widthAnchor.constraint(equalTo: containerForDifferentOrientationView.heightAnchor, multiplier: 0.8),
                 albumImageView.bottomAnchor.constraint(equalTo: containerForDifferentOrientationView.bottomAnchor),
                 albumImageView.centerXAnchor.constraint(equalTo: containerForDifferentOrientationView.centerXAnchor),
-
+                
+                // Название песни
                 nameSongLabel.topAnchor.constraint(equalTo: containerForDifferentOrientationView.bottomAnchor, constant: 30),
                 nameSongLabel.leadingAnchor.constraint(equalTo: leadingAnchor, constant: 30),
                 nameSongLabel.trailingAnchor.constraint(equalTo: trailingAnchor, constant: -30),
 
+                // Имя исполнителя
                 nameSingerLabel.topAnchor.constraint(equalTo: nameSongLabel.bottomAnchor, constant: 10),
                 nameSingerLabel.leadingAnchor.constraint(equalTo: leadingAnchor, constant: 30),
                 nameSingerLabel.trailingAnchor.constraint(equalTo: trailingAnchor, constant: -30)

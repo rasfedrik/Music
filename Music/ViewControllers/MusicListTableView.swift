@@ -98,7 +98,7 @@ class MusicListTableViewController: UITableViewController {
             case .success(let data):
                 DispatchQueue.main.async {
                     self?.albumImageView?.image = UIImage(data: data)
-                    
+                    // Остановка индикатора загрузки данных в таблицу
                     self?.tableActivityIndicator.stopAnimating()
                     self?.view.isUserInteractionEnabled = true
                 }
@@ -133,10 +133,6 @@ class MusicListTableViewController: UITableViewController {
                         self.tracks.append(value)
                     }
                     
-                    // Остановка индикатора загрузки данных в таблицу
-                    self.tableActivityIndicator.stopAnimating()
-                    self.view.isUserInteractionEnabled = true
-                    
                     // Получение изображений
                     self.fetchImage()
                     
@@ -169,7 +165,7 @@ class MusicListTableViewController: UITableViewController {
     }
     
     override func tableView(_ tableView: UITableView, heightForHeaderInSection section: Int) -> CGFloat {
-        return 100
+        return 80
     }
     
     // Настройка хедера с нахванием альбома
