@@ -9,12 +9,28 @@ import UIKit
 
 class ContainerForSongVCView: UIView {
     
+    /// Верхний контейнер
+    private lazy var containerForDifferentOrientationView = {
+        let view = UIView(frame: .zero)
+        view.translatesAutoresizingMaskIntoConstraints = false
+        return view
+    }()
+    
     /// Изображение альбома
     lazy var albumImageView: UIImageView = {
         let imageView = UIImageView(frame: .zero)
         imageView.translatesAutoresizingMaskIntoConstraints = false
         imageView.contentMode = .scaleAspectFit
         return imageView
+    }()
+    
+    /// Скрыть экран
+    lazy var dismissButton: UIButton = {
+        let button = UIButton()
+        button.translatesAutoresizingMaskIntoConstraints = false
+        button.setBackgroundImage(UIImage(systemName: "chevron.down"), for: .normal)
+        button.tintColor = .black
+        return button
     }()
     
     /// Название альбома
@@ -36,7 +52,6 @@ class ContainerForSongVCView: UIView {
         let label = UILabel(frame: .zero)
         label.translatesAutoresizingMaskIntoConstraints = false
         label.numberOfLines = 0
-        label.textAlignment = .center
         return label
     }()
     
@@ -98,54 +113,112 @@ class ContainerForSongVCView: UIView {
         constraints()
     }
     
-    // Добавление констрейнтов
+    // MARK: - Constraints
+    
     private func constraints() {
         
-        // Описание трека
-        addSubview(albumImageView)
-        addSubview(nameAlbumLabel)
-        addSubview(nameSongLabel)
-        addSubview(nameSingerLabel)
+        /// Ориентация устройства
+        let orientationIsLandscape = UIDevice.current.orientation.isLandscape
+        
+        // Констрейнты для верхнего контейнера
+        addSubview(containerForDifferentOrientationView)
         
         NSLayoutConstraint.activate([
-            albumImageView.heightAnchor.constraint(equalToConstant: 200),
-            albumImageView.widthAnchor.constraint(equalToConstant: 200),
-            albumImageView.topAnchor.constraint(equalTo: topAnchor, constant: 20),
-            albumImageView.centerXAnchor.constraint(equalTo: centerXAnchor),
-            
-            nameAlbumLabel.topAnchor.constraint(equalTo: albumImageView.bottomAnchor, constant: 20),
-            nameAlbumLabel.centerXAnchor.constraint(equalTo: albumImageView.centerXAnchor),
-            
-            nameSongLabel.topAnchor.constraint(equalTo: nameAlbumLabel.bottomAnchor, constant: 20),
-            nameSongLabel.centerXAnchor.constraint(equalTo: albumImageView.centerXAnchor),
-            
-            nameSingerLabel.topAnchor.constraint(equalTo: nameSongLabel.bottomAnchor, constant: 20),
-            nameSingerLabel.centerXAnchor.constraint(equalTo: albumImageView.centerXAnchor),
-            nameSingerLabel.widthAnchor.constraint(equalToConstant: frame.width / 2)
+            containerForDifferentOrientationView.heightAnchor.constraint(equalTo: heightAnchor, multiplier: 0.5),
+            containerForDifferentOrientationView.widthAnchor.constraint(equalTo: widthAnchor),
+            containerForDifferentOrientationView.topAnchor.constraint(equalTo: topAnchor),
+            containerForDifferentOrientationView.leadingAnchor.constraint(equalTo: leadingAnchor),
+            containerForDifferentOrientationView.trailingAnchor.constraint(equalTo: trailingAnchor),
         ])
         
+        // Удаление объектов с superview
+        self.removeFromSuperview(
+            albumImageView, nameSongLabel, nameSingerLabel, dismissButton, slider
+        )
+        // Добавление объектов на superview
+        self.addSubviews(
+            nameSongLabel, nameSingerLabel, stackView, slider
+        )
+        
+        nameSongLabel.textAlignment = orientationIsLandscape ? .left : .center
+        nameSingerLabel.textAlignment = orientationIsLandscape ? .left : .center
+        nameAlbumLabel.textAlignment = orientationIsLandscape ? .left : .center
+        
+        // Добавление объектов на containerForDifferentOrientationView
+        containerForDifferentOrientationView.addSubview(albumImageView)
+        containerForDifferentOrientationView.addSubview(dismissButton)
+        containerForDifferentOrientationView.addSubview(nameAlbumLabel)
+        
+        NSLayoutConstraint.activate([
+            dismissButton.topAnchor.constraint(equalTo: topAnchor, constant: 10),
+            dismissButton.leadingAnchor.constraint(equalTo: leadingAnchor, constant: 10),
+            
+            nameAlbumLabel.centerYAnchor.constraint(equalTo: dismissButton.centerYAnchor),
+            nameAlbumLabel.centerXAnchor.constraint(equalTo: containerForDifferentOrientationView.centerXAnchor)
+            ])
+        
+        if orientationIsLandscape {
+            // Горизонтальный режим
+            NSLayoutConstraint.activate([
+                albumImageView.heightAnchor.constraint(equalTo: containerForDifferentOrientationView.heightAnchor, multiplier: 0.5),
+                albumImageView.widthAnchor.constraint(equalTo: containerForDifferentOrientationView.heightAnchor, multiplier: 0.5),
+                albumImageView.topAnchor.constraint(equalTo: nameAlbumLabel.bottomAnchor, constant: 30),
+                albumImageView.leadingAnchor.constraint(equalTo: containerForDifferentOrientationView.leadingAnchor, constant: 50),
+                
+                nameSongLabel.topAnchor.constraint(equalTo: albumImageView.topAnchor),
+                nameSongLabel.leadingAnchor.constraint(equalTo: albumImageView.trailingAnchor, constant: 10),
+                nameSongLabel.trailingAnchor.constraint(equalTo: containerForDifferentOrientationView.trailingAnchor),
+
+                nameSingerLabel.topAnchor.constraint(equalTo: nameSongLabel.bottomAnchor),
+                nameSingerLabel.leadingAnchor.constraint(equalTo: albumImageView.trailingAnchor, constant: 10),
+                nameSingerLabel.trailingAnchor.constraint(equalTo: containerForDifferentOrientationView.trailingAnchor)
+            ])
+            
+            // Слайдер
+            NSLayoutConstraint.activate([
+                slider.topAnchor.constraint(equalTo: containerForDifferentOrientationView.bottomAnchor, constant: 20),
+                slider.leadingAnchor.constraint(equalTo: leadingAnchor, constant: 20),
+                slider.trailingAnchor.constraint(equalTo: trailingAnchor, constant: -20)
+            ])
+            
+        } else {
+            // Вертикальный режим
+            NSLayoutConstraint.activate([
+                
+                albumImageView.heightAnchor.constraint(equalTo: containerForDifferentOrientationView.heightAnchor, multiplier: 0.8),
+                albumImageView.widthAnchor.constraint(equalTo: containerForDifferentOrientationView.heightAnchor, multiplier: 0.8),
+                albumImageView.bottomAnchor.constraint(equalTo: containerForDifferentOrientationView.bottomAnchor),
+                albumImageView.centerXAnchor.constraint(equalTo: containerForDifferentOrientationView.centerXAnchor),
+
+                nameSongLabel.topAnchor.constraint(equalTo: containerForDifferentOrientationView.bottomAnchor, constant: 30),
+                nameSongLabel.leadingAnchor.constraint(equalTo: leadingAnchor, constant: 30),
+                nameSongLabel.trailingAnchor.constraint(equalTo: trailingAnchor, constant: -30),
+
+                nameSingerLabel.topAnchor.constraint(equalTo: nameSongLabel.bottomAnchor, constant: 10),
+                nameSingerLabel.leadingAnchor.constraint(equalTo: leadingAnchor, constant: 30),
+                nameSingerLabel.trailingAnchor.constraint(equalTo: trailingAnchor, constant: -30)
+            ])
+            
+            // Слайдер
+            NSLayoutConstraint.activate([
+                slider.topAnchor.constraint(equalTo: nameSingerLabel.bottomAnchor, constant: 50),
+                slider.leadingAnchor.constraint(equalTo: leadingAnchor, constant: 20),
+                slider.trailingAnchor.constraint(equalTo: trailingAnchor, constant: -20)
+            ])
+        }
+
         // Добавление кнопок управления в stackView
         stackView.addArrangedSubview(previousTrackButton)
         stackView.addArrangedSubview(playPouseButton)
         stackView.addArrangedSubview(nextTrackButton)
         
-        addSubview(stackView)
-        
+        // Констрейнты stackView
         NSLayoutConstraint.activate([
-            stackView.heightAnchor.constraint(equalToConstant: 80),
-            stackView.topAnchor.constraint(equalTo: nameSingerLabel.bottomAnchor, constant: 100),
-            stackView.leadingAnchor.constraint(equalTo: leadingAnchor, constant: 20),
-            stackView.trailingAnchor.constraint(equalTo: trailingAnchor, constant: -20)
+            stackView.heightAnchor.constraint(equalToConstant: 50),
+            stackView.widthAnchor.constraint(equalToConstant: 200),
+            stackView.topAnchor.constraint(equalTo: slider.bottomAnchor, constant: 50),
+            stackView.centerXAnchor.constraint(equalTo: centerXAnchor)
         ])
-        
-        // Слайдер
-        addSubview(slider)
-        NSLayoutConstraint.activate([
-            slider.topAnchor.constraint(equalTo: stackView.bottomAnchor, constant: 50),
-            slider.leadingAnchor.constraint(equalTo: leadingAnchor, constant: 20),
-            slider.trailingAnchor.constraint(equalTo: trailingAnchor, constant: -20)
-        ])
-        
     }
     
 }

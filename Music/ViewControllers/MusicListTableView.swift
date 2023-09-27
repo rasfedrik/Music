@@ -46,13 +46,10 @@ class MusicListTableViewController: UITableViewController {
             }
         }
     }
+    // MARK: - Lifecycle
     
     override func viewDidLoad() {
         super.viewDidLoad()
-        
-        // Настройка Navigation controller
-        navigationItem.style = .navigator
-        navigationController?.navigationBar.barTintColor = .black
         
         tableView.delegate = self
         tableView.dataSource = self
@@ -64,6 +61,7 @@ class MusicListTableViewController: UITableViewController {
             width: 300,
             height: 300
         ))
+        
         albumImageView?.contentMode = .scaleAspectFit
         tableView.tableHeaderView = albumImageView
         
@@ -78,12 +76,11 @@ class MusicListTableViewController: UITableViewController {
                            forHeaderFooterViewReuseIdentifier: HeaderView.identifier)
         
         // Изменение цвета и оттенка таблицы
-        tableView.backgroundColor = .black
-        tableView.tintColor = .black
-        
+        tableView.backgroundColor = .commonColor
+        tableView.separatorStyle = .none
         fetchSongs()
-        
     }
+    
     /// Настройка индикатора загрузки данных в таблицу
     private func activityIndicatorSettings() {
         tableActivityIndicator = UIActivityIndicatorView(frame: .zero)
@@ -179,8 +176,7 @@ class MusicListTableViewController: UITableViewController {
     override func tableView(_ tableView: UITableView, viewForHeaderInSection section: Int) -> UIView? {
         guard let header = tableView.dequeueReusableHeaderFooterView(withIdentifier: HeaderView.identifier) as? HeaderView else { fatalError("header fail") }
         header.nameLabel.text = collection?.album.the234234.name
-        
-        header.tintColor = .black
+
         return header
     }
     

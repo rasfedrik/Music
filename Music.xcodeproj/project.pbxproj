@@ -28,6 +28,7 @@
 		D8A96E912A9F8E410015BBD3 /* MusicListTableView.swift in Sources */ = {isa = PBXBuildFile; fileRef = D8A96E902A9F8E400015BBD3 /* MusicListTableView.swift */; };
 		D8A96E982A9F91DB0015BBD3 /* SongTableViewCell.swift in Sources */ = {isa = PBXBuildFile; fileRef = D8A96E962A9F91DB0015BBD3 /* SongTableViewCell.swift */; };
 		D8A96E992A9F91DB0015BBD3 /* SongTableViewCell.xib in Resources */ = {isa = PBXBuildFile; fileRef = D8A96E972A9F91DB0015BBD3 /* SongTableViewCell.xib */; };
+		D8AC29DA2AC1613B00CA5A1C /* Extesnions.swift in Sources */ = {isa = PBXBuildFile; fileRef = D8AC29D92AC1613B00CA5A1C /* Extesnions.swift */; };
 		D8D83E2B2AA3494700B48F28 /* ContainerForSongVCView.swift in Sources */ = {isa = PBXBuildFile; fileRef = D8D83E2A2AA3494700B48F28 /* ContainerForSongVCView.swift */; };
 /* End PBXBuildFile section */
 
@@ -55,6 +56,7 @@
 		D8A96E902A9F8E400015BBD3 /* MusicListTableView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = MusicListTableView.swift; sourceTree = "<group>"; };
 		D8A96E962A9F91DB0015BBD3 /* SongTableViewCell.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = SongTableViewCell.swift; sourceTree = "<group>"; };
 		D8A96E972A9F91DB0015BBD3 /* SongTableViewCell.xib */ = {isa = PBXFileReference; lastKnownFileType = file.xib; path = SongTableViewCell.xib; sourceTree = "<group>"; };
+		D8AC29D92AC1613B00CA5A1C /* Extesnions.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = Extesnions.swift; sourceTree = "<group>"; };
 		D8D83E2A2AA3494700B48F28 /* ContainerForSongVCView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ContainerForSongVCView.swift; sourceTree = "<group>"; };
 /* End PBXFileReference section */
 
@@ -74,6 +76,7 @@
 			children = (
 				D81797982A9FA0800038665C /* Views */,
 				D81797972A9FA0740038665C /* Cell */,
+				D8AC29D92AC1613B00CA5A1C /* Extesnions.swift */,
 			);
 			path = Views;
 			sourceTree = "<group>";
@@ -273,6 +276,7 @@
 			buildActionMask = 2147483647;
 			files = (
 				D81797A32AA096F40038665C /* SongViewController.swift in Sources */,
+				D8AC29DA2AC1613B00CA5A1C /* Extesnions.swift in Sources */,
 				D817979F2AA03F810038665C /* HeaderView.swift in Sources */,
 				D81797B02AA0BE9A0038665C /* SongTableViewCellViewModel.swift in Sources */,
 				D8A96E7C2A9F8B110015BBD3 /* AppDelegate.swift in Sources */,

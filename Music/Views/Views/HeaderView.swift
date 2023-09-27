@@ -14,9 +14,8 @@ class HeaderView: UITableViewHeaderFooterView {
     let nameLabel: UILabel = {
         let name = UILabel(frame: .zero)
         name.translatesAutoresizingMaskIntoConstraints = false
-        name.text = "Топ Узбекистан"
         name.font = name.font.withSize(25)
-        name.textColor = .white
+        name.textColor = .black
         return name
     }()
     
@@ -35,8 +34,7 @@ class HeaderView: UITableViewHeaderFooterView {
         
         NSLayoutConstraint.activate([
             nameLabel.topAnchor.constraint(equalTo: topAnchor),
-            nameLabel.leadingAnchor.constraint(equalTo: leadingAnchor),
-            nameLabel.trailingAnchor.constraint(equalTo: trailingAnchor),
+            nameLabel.centerXAnchor.constraint(equalTo: centerXAnchor),
             nameLabel.bottomAnchor.constraint(equalTo: bottomAnchor)
         ])
         

@@ -42,16 +42,19 @@ class SongViewController: UIViewController {
     override func viewDidLoad() {
         super.viewDidLoad()
         
-        view.backgroundColor = .systemBackground
+        view.backgroundColor = .commonColor
         
         audioPlayerConfigure()
         descriptionTreckConfigure()
         
-        /// Обработка событий после нажатия кнопок плеера
+        // Обработка событий после нажатия кнопок плеера
         container.previousTrackButton.addTarget(self, action: #selector(didTapPreviousTrackButton), for: .touchUpInside)
         container.playPouseButton.addTarget(self, action: #selector(didTapPlayPouseButton), for: .touchUpInside)
         container.nextTrackButton.addTarget(self, action: #selector(didTapNextTrackButton), for: .touchUpInside)
+        
         container.slider.addTarget(self, action: #selector(sliderAcrion), for: .touchUpInside)
+        
+        container.dismissButton.addTarget(self, action: #selector(dismissButtonTapped), for: .touchUpInside)
         
         addContainerConstraints()
         
@@ -68,8 +71,13 @@ class SongViewController: UIViewController {
     
     // MARK: - Actions
     
+    /// Cкрыть экран
+    @objc private func dismissButtonTapped(_ sender: UIButton) {
+        dismiss(animated: true)
+    }
+    
     /// Включить предыдущий трек
-    @objc func didTapPreviousTrackButton(_ sender: UIButton) {
+    @objc private func didTapPreviousTrackButton(_ sender: UIButton) {
         if position > 0 {
             position = position - 1
             audioPlayer?.stop()
@@ -201,6 +209,7 @@ class SongViewController: UIViewController {
     }
     
 }
+
 
 // MARK: - AVAudioPlayerDelegate
 extension SongViewController: AVAudioPlayerDelegate {

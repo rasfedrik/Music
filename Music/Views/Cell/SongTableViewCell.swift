@@ -42,6 +42,8 @@ class SongTableViewCell: UITableViewCell {
             }
             
         }
+        
+        backgroundColor = .commonColor
     }
     
 }
